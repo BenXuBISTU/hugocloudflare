@@ -1,0 +1,11 @@
+deploy:
+  script:
+    - your_deploy_commands
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - api_failure
+      - stuck_or_timeout_failure
+  variables:
+    GIT_STRATEGY: clone 
