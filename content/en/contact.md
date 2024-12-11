@@ -7,8 +7,12 @@ type: page
 menu: main
 ---
 
-This is an example of a custom shortcode that you can put right into your content. You will need to add a form action to the shortcode to make it work.
+# Contact Information
 
-Read more on [how to enable the contact form](https://github.com/theNewDynamic/gohugo-theme-ananke/#activate-the-contact-form).
+Feel free to contact us through the following methods:
 
-{{< form-contact action="https://example.com"  >}}
+- Email: your.email@example.com
+- GitHub: [Your GitHub](https://github.com/yourusername)
+- Twitter: [@YourTwitter](https://twitter.com/yourusername)
+
+Or leave a message using the comment system below.

@@ -2,15 +2,17 @@
 title: Contact
 featured_image: ''
 omit_header_text: true
-description: Laissez-nous un message!
+description: Nous aimerions avoir de vos nouvelles
 type: page
 menu: main
 ---
 
-Ceci est la page de contact en Français.
+# Informations de Contact
 
-This is an example of a custom shortcode that you can put right into your content. You will need to add a form action to the shortcode to make it work.
+N'hésitez pas à nous contacter par les moyens suivants:
 
-Read more on [how to enable the contact form](https://github.com/theNewDynamic/gohugo-theme-ananke/#activate-the-contact-form).
+- Email: your.email@example.com
+- GitHub: [Votre GitHub](https://github.com/yourusername)
+- Twitter: [@VotreTwitter](https://twitter.com/yourusername)
 
-{{< form-contact action="https://example.com"  >}}
+Ou laissez un message en utilisant le système de commentaires ci-dessous.
