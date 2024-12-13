@@ -40,44 +40,41 @@ github-sync:
     - git config --global user.name "BenXuBISTU"
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
     # 创建 GitHub Actions 工作流配置
-    - |
-      mkdir -p temp_content/.github/workflows
-      cat > temp_content/.github/workflows/hugo.yml << EOF
-      name: Deploy Hugo site to Pages
-      on:
-        push:
-          branches: [ master ]
-      permissions:
-        contents: read
-        pages: write
-        id-token: write
-      jobs:
-        build:
-          runs-on: ubuntu-latest
-          steps:
-            - uses: actions/checkout@v4
-            - name: Setup Hugo
-              uses: peaceiris/actions-hugo@v2
-              with:
-                hugo-version: latest
-                extended: true
-            - name: Build
-              run: hugo --minify
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                path: ./public
-        deploy:
-          needs: build
-          runs-on: ubuntu-latest
-          environment:
-            name: github-pages
-            url: \${{ steps.deployment.outputs.page_url }}
-          steps:
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
-      EOF
+    - mkdir -p temp_content/.github/workflows
+    - echo "name: Deploy Hugo site to Pages" > temp_content/.github/workflows/hugo.yml
+    - echo "on:" >> temp_content/.github/workflows/hugo.yml
+    - echo "  push:" >> temp_content/.github/workflows/hugo.yml
+    - echo "    branches: [ master ]" >> temp_content/.github/workflows/hugo.yml
+    - echo "permissions:" >> temp_content/.github/workflows/hugo.yml
+    - echo "  contents: read" >> temp_content/.github/workflows/hugo.yml
+    - echo "  pages: write" >> temp_content/.github/workflows/hugo.yml
+    - echo "  id-token: write" >> temp_content/.github/workflows/hugo.yml
+    - echo "jobs:" >> temp_content/.github/workflows/hugo.yml
+    - echo "  build:" >> temp_content/.github/workflows/hugo.yml
+    - echo "    runs-on: ubuntu-latest" >> temp_content/.github/workflows/hugo.yml
+    - echo "    steps:" >> temp_content/.github/workflows/hugo.yml
+    - echo "      - uses: actions/checkout@v4" >> temp_content/.github/workflows/hugo.yml
+    - echo "      - name: Setup Hugo" >> temp_content/.github/workflows/hugo.yml
+    - echo "        uses: peaceiris/actions-hugo@v2" >> temp_content/.github/workflows/hugo.yml
+    - echo "        with:" >> temp_content/.github/workflows/hugo.yml
+    - echo "          hugo-version: latest" >> temp_content/.github/workflows/hugo.yml
+    - echo "          extended: true" >> temp_content/.github/workflows/hugo.yml
+    - echo "      - name: Build" >> temp_content/.github/workflows/hugo.yml
+    - echo "        run: hugo --minify" >> temp_content/.github/workflows/hugo.yml
+    - echo "      - name: Upload artifact" >> temp_content/.github/workflows/hugo.yml
+    - echo "        uses: actions/upload-pages-artifact@v3" >> temp_content/.github/workflows/hugo.yml
+    - echo "        with:" >> temp_content/.github/workflows/hugo.yml
+    - echo "          path: ./public" >> temp_content/.github/workflows/hugo.yml
+    - echo "  deploy:" >> temp_content/.github/workflows/hugo.yml
+    - echo "    needs: build" >> temp_content/.github/workflows/hugo.yml
+    - echo "    runs-on: ubuntu-latest" >> temp_content/.github/workflows/hugo.yml
+    - echo "    environment:" >> temp_content/.github/workflows/hugo.yml
+    - echo "      name: github-pages" >> temp_content/.github/workflows/hugo.yml
+    - echo "      url: \${{ steps.deployment.outputs.page_url }}" >> temp_content/.github/workflows/hugo.yml
+    - echo "    steps:" >> temp_content/.github/workflows/hugo.yml
+    - echo "      - name: Deploy to GitHub Pages" >> temp_content/.github/workflows/hugo.yml
+    - echo "        id: deployment" >> temp_content/.github/workflows/hugo.yml
+    - echo "        uses: actions/deploy-pages@v4" >> temp_content/.github/workflows/hugo.yml
     # 复制内容文件
     - cp -r content static config.toml themes temp_content/
     # 推送到 GitHub
