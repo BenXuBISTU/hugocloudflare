@@ -17,7 +17,7 @@ variables:
 
 default:
   before_script:
-    - apk add --no-cache go curl bash nodejs
+    - apk add --no-cache go curl bash nodejs git
     - hugo mod get -u $THEME_URL
     ## Uncomment the following if you use PostCSS. See https://gohugo.io/hugo-pipes/postcss/
     #- npm install postcss postcss-cli autoprefixer
@@ -34,5 +34,15 @@ pages:
   artifacts:
     paths:
       - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+
+github-sync:
+  stage: deploy
+  script:
+    - git config --global user.email "benxu@bistu.edu.cn"
+    - git config --global user.name "BenXuBISTU"
+    - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
+    - git push github master
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
