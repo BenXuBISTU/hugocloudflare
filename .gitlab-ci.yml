@@ -14,6 +14,7 @@ image: registry.gitlab.com/pages/hugo/hugo_extended:latest
 variables:
   HUGO_ENV: production
   THEME_URL: "github.com/theNewDynamic/gohugo-theme-ananke"
+  GIT_DEPTH: "0"  # 获取完整的 git 历史
 
 default:
   before_script:
@@ -41,21 +42,34 @@ pages:
 github-sync:
   stage: deploy
   script:
+    # 调试信息
+    - echo "Starting GitHub sync..."
+    - git status
+    
     # 确保我们有完整的仓库
+    - echo "Fetching repository..."
     - git fetch --unshallow || true
     - git fetch origin
+    
     # 配置 Git
+    - echo "Configuring Git..."
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
+    
     # 添加 GitHub 远程仓库
+    - echo "Adding GitHub remote..."
+    - git remote -v
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    # 强制推送到 GitHub
+    - git remote -v
+    
+    # 推送到 GitHub
+    - echo "Pushing to GitHub..."
     - git push -f github HEAD:master
-    # 构建站点
-    - hugo
-    # 创建 .github/workflows/hugo.yml 文件用于 GitHub Pages 部署
+    
+    # 创建 GitHub Actions 配置
+    - echo "Creating GitHub Actions workflow..."
+    - mkdir -p .github/workflows
     - |
-      mkdir -p .github/workflows
       cat > .github/workflows/hugo.yml << 'EOF'
       name: Deploy Hugo site to Pages
 
@@ -96,9 +110,13 @@ github-sync:
               id: deployment
               uses: actions/deploy-pages@v4
       EOF
+    
     # 提交并推送 GitHub Actions 配置
+    - echo "Committing and pushing workflow file..."
     - git add .github/workflows/hugo.yml
     - git commit -m "ci: add GitHub Pages workflow" || true
     - git push -f github HEAD:master
+    
+    - echo "GitHub sync completed!"
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
