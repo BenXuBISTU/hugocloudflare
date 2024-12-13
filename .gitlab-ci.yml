@@ -36,11 +36,15 @@ pages:
 
 github-sync:
   stage: deploy
-  script:
+  script: 
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    - git add content/ static/ config.toml themes/
+    - mkdir -p temp_content
+    - cp -r content static config.toml themes temp_content/
+    - cd temp_content
+    - git init
+    - git add .
     - git commit -m "content: update site content" || true
     - git push -f github HEAD:master
   only:
