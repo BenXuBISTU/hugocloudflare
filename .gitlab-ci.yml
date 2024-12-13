@@ -14,19 +14,13 @@ image: registry.gitlab.com/pages/hugo/hugo_extended:latest
 variables:
   HUGO_ENV: production
   THEME_URL: "github.com/theNewDynamic/gohugo-theme-ananke"
-  GIT_DEPTH: "0"
 
 default:
   before_script:
     - apk add --no-cache go curl bash nodejs git
     - hugo mod get -u $THEME_URL
 
-test:
-  script:
-    - hugo
-  rules:
-    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-
+# 只构建站点文件
 pages:
   stage: deploy
   script:
@@ -37,14 +31,19 @@ pages:
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
+# 只同步内容文件到 GitHub
 github-sync:
   stage: deploy
   script:
-    - git fetch --unshallow || true
-    - git fetch origin
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
+    # 只推送必要的文件
+    - git add content/
+    - git add static/
+    - git add config.toml
+    - git add themes/ || true
+    - git commit -m "content: update site content" || true
     - git push -f github HEAD:master
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
