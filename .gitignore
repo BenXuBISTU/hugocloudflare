@@ -1,3 +1,15 @@
+# Hugo
 public/
+resources/
 .hugo_build.lock
-themes/ananke
+
+# Obsidian
+obsidian/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 其他
+init
+sites
