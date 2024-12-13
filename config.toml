@@ -16,32 +16,45 @@
 #theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
 theme = "DoIt"
 
-baseURL = "/"
-title = "My Hugo Site"
+baseURL = "https://tips.git4ta.fun"
+title = "觅钥贴士"
 contentdir    = "content"
 layoutdir     = "layouts"
 publishdir    = "public"
-languageCode = "en-us"
+languageCode = "zh-CN"
 resourceDir = "../resources"
 
-DefaultContentLanguage = "en"
+DefaultContentLanguage = "zh-cn"
 SectionPagesMenu = "main"
-Paginate = 3 # this is set low for demonstrating with dummy content. Set to a higher number
+Paginate = 3
 googleAnalytics = ""
 enableRobotsTXT = true
 
 [languages]
-  [languages.en]
+  [languages.zh-cn]
     weight = 1
-    contentDir = "content/en"
-  [languages.fr]
-    weight = 2
-    contentDir = "content/fr"
+    title = "觅钥贴士"
+    languageCode = "zh-CN"
+    languageName = "简体中文"
 
-[sitemap]
-  changefreq = "monthly"
-  priority = 0.5
-  filename = "sitemap.xml"
+[menu]
+  [[menu.main]]
+    identifier = "技术"
+    name = "技术"
+    url = "/技术/"
+    weight = 1
+    
+  [[menu.main]]
+    identifier = "生活"
+    name = "生活"
+    url = "/生活/"
+    weight = 2
+
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 50
 
 [params]
   version = "0.3.X"
@@ -55,6 +68,11 @@ enableRobotsTXT = true
   [params.header]
     desktopMode = "fixed"
     mobileMode = "auto"
+    [params.header.title]
+      name = "觅钥贴士"
+      typeit = false
+    [params.header.menu]
+      paginate = 10
 
   [params.footer]
     enable = true
@@ -91,12 +109,18 @@ enableRobotsTXT = true
     highlightTag = "em"
     absoluteURL = false
 
-  [params.author]
-    name = "Your Name"
-    email = ""
-    link = ""
-    avatar = ""
+  [params.list]
+    paginate = 10
+    dateFormat = "01-02"
+    rss = 10
 
-[[params.ananke_socials]]
-name = "twitter"
-url = "https://twitter.com/GoHugoIO"
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+[params.author]
+  name = "Ben"
+  email = ""
+  link = "https://tips.git4ta.fun"
+  avatar = ""
