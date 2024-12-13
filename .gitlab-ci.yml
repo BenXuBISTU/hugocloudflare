@@ -40,9 +40,15 @@ pages:
 github-sync:
   stage: deploy
   script:
+    # 确保我们有完整的仓库
+    - git fetch --unshallow || true
+    - git fetch origin
+    # 配置 Git
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
+    # 添加 GitHub 远程仓库
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    - git push github master
+    # 强制推送到 GitHub
+    - git push -f github HEAD:master
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
