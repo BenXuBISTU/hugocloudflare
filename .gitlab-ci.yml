@@ -27,7 +27,6 @@ test:
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
-# GitLab Pages 部署
 pages:
   stage: deploy
   script:
@@ -38,67 +37,14 @@ pages:
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
-# GitHub 同步和部署
 github-sync:
   stage: deploy
   script:
-    - echo "Starting GitHub sync..."
-    - git status
-    - echo "Fetching repository..."
     - git fetch --unshallow || true
     - git fetch origin
-    - echo "Configuring Git..."
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
-    - echo "Adding GitHub remote..."
-    - git remote -v
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    - git remote -v
-    - echo "Pushing to GitHub..."
     - git push -f github HEAD:master
-    - echo "Creating GitHub Actions workflow..."
-    - mkdir -p .github/workflows
-    - echo "name: Deploy Hugo site to Pages" > .github/workflows/hugo.yml
-    - echo "" >> .github/workflows/hugo.yml
-    - echo "on:" >> .github/workflows/hugo.yml
-    - echo "  push:" >> .github/workflows/hugo.yml
-    - echo "    branches: [master]" >> .github/workflows/hugo.yml
-    - echo "" >> .github/workflows/hugo.yml
-    - echo "permissions:" >> .github/workflows/hugo.yml
-    - echo "  contents: read" >> .github/workflows/hugo.yml
-    - echo "  pages: write" >> .github/workflows/hugo.yml
-    - echo "  id-token: write" >> .github/workflows/hugo.yml
-    - echo "" >> .github/workflows/hugo.yml
-    - echo "jobs:" >> .github/workflows/hugo.yml
-    - echo "  build:" >> .github/workflows/hugo.yml
-    - echo "    runs-on: ubuntu-latest" >> .github/workflows/hugo.yml
-    - echo "    steps:" >> .github/workflows/hugo.yml
-    - echo "      - uses: actions/checkout@v4" >> .github/workflows/hugo.yml
-    - echo "      - name: Setup Hugo" >> .github/workflows/hugo.yml
-    - echo "        uses: peaceiris/actions-hugo@v2" >> .github/workflows/hugo.yml
-    - echo "        with:" >> .github/workflows/hugo.yml
-    - echo "          hugo-version: 'latest'" >> .github/workflows/hugo.yml
-    - echo "          extended: true" >> .github/workflows/hugo.yml
-    - echo "      - name: Build" >> .github/workflows/hugo.yml
-    - echo "        run: hugo" >> .github/workflows/hugo.yml
-    - echo "      - name: Upload artifact" >> .github/workflows/hugo.yml
-    - echo "        uses: actions/upload-pages-artifact@v3" >> .github/workflows/hugo.yml
-    - echo "        with:" >> .github/workflows/hugo.yml
-    - echo "          path: ./public" >> .github/workflows/hugo.yml
-    - echo "" >> .github/workflows/hugo.yml
-    - echo "  deploy:" >> .github/workflows/hugo.yml
-    - echo "    environment:" >> .github/workflows/hugo.yml
-    - echo "      name: github-pages" >> .github/workflows/hugo.yml
-    - echo "      url: \${{ steps.deployment.outputs.page_url }}" >> .github/workflows/hugo.yml
-    - echo "    runs-on: ubuntu-latest" >> .github/workflows/hugo.yml
-    - echo "    needs: build" >> .github/workflows/hugo.yml
-    - echo "    steps:" >> .github/workflows/hugo.yml
-    - echo "      - name: Deploy to GitHub Pages" >> .github/workflows/hugo.yml
-    - echo "        id: deployment" >> .github/workflows/hugo.yml
-    - echo "        uses: actions/deploy-pages@v4" >> .github/workflows/hugo.yml
-    - git add .github/workflows/hugo.yml
-    - git commit -m "ci: add GitHub Pages workflow" || true
-    - git push -f github HEAD:master
-    - echo "GitHub sync completed!"
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
