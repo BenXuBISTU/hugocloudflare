@@ -3,6 +3,7 @@ deploy:
   before_script:
     - chmod +x build.sh
     - npm install -g wrangler
+    - wrangler login
   script:
     - ./build.sh
   retry:
@@ -12,4 +13,6 @@ deploy:
       - api_failure
       - stuck_or_timeout_failure
   variables:
-    GIT_STRATEGY: clone 
+    GIT_STRATEGY: clone
+    CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+    CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID}

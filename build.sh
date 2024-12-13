@@ -24,7 +24,7 @@ deploy_to_cloudflare() {
     local retry_count=0
     
     while [ $retry_count -lt $MAX_RETRIES ]; do
-        if wrangler pages publish public; then
+        if wrangler pages publish public --project-name=您的项目名称 --branch=production; then
             echo "部署成功！"
             return 0
         else
