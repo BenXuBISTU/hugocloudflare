@@ -16,16 +16,15 @@ variables:
   THEME_URL: "github.com/theNewDynamic/gohugo-theme-ananke"
 
 stages:
-  - test      # 测试阶段
-  - build     # 构建阶段
-  - deploy    # 部署阶段
+  - test
+  - deploy
 
 default:
   before_script:
     - apk add --no-cache go curl bash nodejs git
     - hugo mod get -u $THEME_URL
 
-# 测试阶段：检查 Hugo 构建是否正常
+# 测试构建
 test:
   stage: test
   script:
@@ -33,43 +32,59 @@ test:
   only:
     - master
 
-# 构建阶段：生成静态文件
-build:
-  stage: build
-  script:
-    - hugo --minify
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
-
-# 部署阶段：部署到 GitLab Pages
-pages:
-  stage: deploy
-  dependencies:
-    - build
-  script:
-    - echo "Deploying to GitLab Pages..."
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
-
-# 部署阶段：同步到 GitHub
+# 推送到 GitHub 并使用 GitHub Pages
 github-sync:
   stage: deploy
   script: 
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    - mkdir -p temp_content
+    # 创建 GitHub Actions 工作流配置
+    - |
+      mkdir -p temp_content/.github/workflows
+      cat > temp_content/.github/workflows/hugo.yml << EOF
+      name: Deploy Hugo site to Pages
+      on:
+        push:
+          branches: [ master ]
+      permissions:
+        contents: read
+        pages: write
+        id-token: write
+      jobs:
+        build:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - name: Setup Hugo
+              uses: peaceiris/actions-hugo@v2
+              with:
+                hugo-version: latest
+                extended: true
+            - name: Build
+              run: hugo --minify
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                path: ./public
+        deploy:
+          needs: build
+          runs-on: ubuntu-latest
+          environment:
+            name: github-pages
+            url: \${{ steps.deployment.outputs.page_url }}
+          steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
+      EOF
+    # 复制内容文件
     - cp -r content static config.toml themes temp_content/
+    # 推送到 GitHub
     - cd temp_content
     - git init
     - git add .
-    - git commit -m "content: update site content" || true
+    - git commit -m "content: update site content and workflow" || true
     - git push -f github HEAD:master
   only:
     - master
