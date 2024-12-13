@@ -9,7 +9,7 @@
 # - To change the theme, see
 #   https://gitlab.com/pages/hugo/-/blob/main/README.md#use-a-custom-theme.
 #
-image: registry.gitlab.com/pages/hugo/hugo_extended:latest
+image: alpine:latest
 
 variables:
   HUGO_ENV: production
@@ -20,16 +20,18 @@ stages:
 
 github-sync:
   stage: deploy
-  script:
-    - git config --global user.email "benxu@bistu.edu.cn"
-    - git config --global user.name "BenXuBISTU"
-    - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    - mkdir -p temp_content
-    - cp -r content static config.toml themes temp_content/
-    - cd temp_content
-    - git init
-    - git add .
-    - git commit -m "content: update site content" || true
-    - git push -f github HEAD:master
+  before_script:
+    - apk add git
+  script: |
+    git config --global user.email "houzhongxu@bistu.edu.cn"
+    git config --global user.name "BenXuBISTU"
+    git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
+    mkdir -p temp_content
+    cp -r content static config.toml themes temp_content/
+    cd temp_content
+    git init
+    git add .
+    git commit -m "content: update site content" || true
+    git push -f github HEAD:master
   only:
     - master
