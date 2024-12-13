@@ -23,15 +23,23 @@ github-sync:
   before_script:
     - apk add git
   script: |
+    # 先设置全局配置
     git config --global user.email "houzhongxu@bistu.edu.cn"
     git config --global user.name "BenXuBISTU"
+    
+    # 先添加远程仓库
     git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
+    git remote -v
+    
+    # 然后准备内容
     mkdir -p temp_content
     cp -r content static config.toml themes temp_content/
     cd temp_content
     git init
     git add .
     git commit -m "content: update site content" || true
+    
+    # 最后推送
     git push -f github HEAD:master
   only:
     - master
