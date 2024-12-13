@@ -35,11 +35,10 @@ test:
 # 推送到 GitHub 并使用 GitHub Pages
 github-sync:
   stage: deploy
-  script: 
+  script:
     - git config --global user.email "benxu@bistu.edu.cn"
     - git config --global user.name "BenXuBISTU"
     - git remote add github https://${GITHUB_TOKEN}@github.com/BenXuBISTU/hugocloudflare.git || true
-    # 创建 GitHub Actions 工作流配置
     - mkdir -p temp_content/.github/workflows
     - echo "name: Deploy Hugo site to Pages" > temp_content/.github/workflows/hugo.yml
     - echo "on:" >> temp_content/.github/workflows/hugo.yml
@@ -75,9 +74,7 @@ github-sync:
     - echo "      - name: Deploy to GitHub Pages" >> temp_content/.github/workflows/hugo.yml
     - echo "        id: deployment" >> temp_content/.github/workflows/hugo.yml
     - echo "        uses: actions/deploy-pages@v4" >> temp_content/.github/workflows/hugo.yml
-    # 复制内容文件
     - cp -r content static config.toml themes temp_content/
-    # 推送到 GitHub
     - cd temp_content
     - git init
     - git add .
